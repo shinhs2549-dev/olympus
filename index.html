@@ -212,13 +212,34 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 .sheet h2{font-size:30px}
 .sheet p{margin:0;font-size:18px;line-height:1.5}
 .sheet .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.mcard{width:min(270px,62vw);aspect-ratio:2/3;perspective:1200px}
+.mcard{position:relative;width:min(270px,62vw);aspect-ratio:2/3;perspective:1200px;padding:0;border:0;background:none;display:block;flex:none}
+.draw-row .mcard{width:min(190px,36vw);transition:width .45s cubic-bezier(.3,1.2,.5,1),transform .4s ease,opacity .4s ease}
+.mcard.deal{animation:deal .65s cubic-bezier(.2,1.25,.4,1) var(--d) both,hover 2.4s ease-in-out calc(var(--d) + .65s) infinite}
+.mcard.deal .mc-back{box-shadow:0 12px 30px rgba(10,15,40,.45),0 0 26px rgba(255,214,90,.55)}
+.mcard.deal:active{transform:scale(.95)}
+.mcard.away{opacity:0;transform:translateY(50px) scale(.7) rotate(14deg)}
+.mcard.chosen{transform:translateY(-8px) scale(1.04)}
+.draw-row .mcard.grow{width:min(270px,62vw);transform:none}
+.mcard.shake .mcard-in{animation:wiggle .6s ease-in-out}
+.burst{position:absolute;inset:0;pointer-events:none}
+.spark{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,#ffd25e 60%,transparent 70%);animation:spark .9s ease-out both}
+.draw-sheet{background:radial-gradient(circle at 50% 35%,#3c4fa6 0,#232c66 70%);color:#fff;max-width:min(620px,100%)}
+.draw-sheet .intro{color:#fff}
+.draw-row{display:flex;gap:clamp(14px,4vw,30px);justify-content:center;align-items:center;min-height:min(300px,62vw)}
+.draw-ask{font-family:var(--f-display);font-size:28px;color:#ffe08a;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.draw-ask.reveal{background:#fff;padding:2px 18px;border-radius:99px;text-shadow:none;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes deal{from{transform:translateY(-75vh) rotate(-28deg) scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes hover{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-9px) rotate(1.5deg)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}15%{transform:rotate(-7deg) scale(1.03)}35%{transform:rotate(7deg) scale(1.05)}55%{transform:rotate(-5deg)}75%{transform:rotate(4deg)}}
+@keyframes spark{0%{transform:rotate(var(--a)) translateY(0) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(.2);opacity:0}}
 .mcard-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.3,1.3,.5,1)}
 .mcard.flip .mcard-in{transform:rotateY(180deg)}
 .mc-back,.mc-front{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;overflow:hidden;box-shadow:0 12px 30px rgba(30,40,70,.3)}
-.mc-back{background:radial-gradient(circle at 50% 45%,#fff3c7 0 18%,transparent 19%),repeating-conic-gradient(from 0deg,#f5b93c 0 15deg,#ffcf62 15deg 30deg);border:6px solid #fff;display:flex;align-items:center;justify-content:center}
-.mc-back svg{width:30%;fill:#f0a91c}
-.mc-front{transform:rotateY(180deg);background:#fff;border:6px solid var(--cc);display:flex;flex-direction:column}
+.mc-back{background:radial-gradient(circle,#ffe9a8 0 1.2px,transparent 1.8px) 0 0/18px 18px,radial-gradient(circle at 50% 50%,#4a63c9 0,#26337a 75%);border:6px solid #f5c95a;display:flex;align-items:center;justify-content:center}
+.mc-back::before{content:"";position:absolute;inset:7px;border:2px solid rgba(245,201,90,.7);border-radius:12px}
+.mc-back img{width:64%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:4px solid #f5c95a;box-shadow:0 0 22px rgba(255,214,90,.8);position:relative}
+.mc-back svg{width:34%;fill:#f5c95a;position:relative}
+.mc-front{transform:rotateY(180deg);background:#fff;color:var(--ink);border:6px solid var(--cc);display:flex;flex-direction:column}
 .mc-art{flex:1;min-height:0;position:relative;background:var(--cc)}
 .mc-art img{width:100%;height:100%;object-fit:cover;display:block}
 .mc-ribbon{position:absolute;left:8px;top:8px;font-family:var(--f-display);font-size:14px;color:#fff;background:var(--cc);padding:2px 10px;border-radius:99px;border:2px solid #fff}
@@ -242,6 +263,24 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 .rank-list img{width:50px;height:50px;object-fit:contain}
 .rank-list em{font-style:normal;color:var(--gold-deep);font-size:24px}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:2100}
+#info{position:fixed;inset:0;z-index:2050;display:flex;align-items:center;justify-content:center;background:rgba(30,40,64,.5);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px))}
+.info-card{width:min(440px,100%);max-height:100%;overflow:auto;background:var(--marble);border-radius:30px;box-shadow:0 24px 60px rgba(20,30,60,.4);
+  border:6px solid var(--pc);animation:rise .4s cubic-bezier(.2,1.3,.4,1);display:flex;flex-direction:column}
+.info-art{position:relative;background:radial-gradient(circle at 50% 60%,#fff 0 30%,transparent 70%),var(--pc);display:flex;justify-content:center;padding:14px 0 0}
+.info-art::after{content:"";position:absolute;inset:auto 0 0;height:22px;background:linear-gradient(transparent,var(--marble))}
+.info-art img{width:min(250px,62vw);aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(30,40,70,.3));animation:bob 2.2s ease-in-out infinite;position:relative;z-index:1}
+.info-who{position:absolute;left:12px;top:12px;font-family:var(--f-display);font-size:16px;color:#fff;background:rgba(0,0,0,.18);padding:3px 12px;border-radius:99px;z-index:2}
+.info-body{padding:6px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.info-title{font-family:var(--f-display);font-size:17px;color:var(--pc);background:#fff;border:2px solid var(--pc);padding:2px 14px;border-radius:99px}
+.info-body h2{font-size:38px;line-height:1}
+.info-body > p{margin:0;font-size:18px;line-height:1.55}
+.info-abl{width:100%;background:#fff;border-radius:18px;padding:10px 14px;text-align:left;display:flex;flex-direction:column;gap:4px;box-shadow:inset 0 0 0 2px var(--line)}
+.info-abl .ability-head b{font-family:var(--f-display);font-weight:400;font-size:19px}
+.info-abl p{margin:0;font-size:15px;line-height:1.4;color:var(--ink-soft)}
+.tapme{cursor:pointer}
+.token .tk-img{pointer-events:auto;cursor:pointer}
+@keyframes rise{from{transform:translateY(40px) scale(.9);opacity:0}to{transform:none;opacity:1}}
 
 /* dex */
 #dex{position:fixed;inset:0;z-index:1500;background:linear-gradient(180deg,var(--sky),var(--sky-2));overflow-y:auto;
@@ -321,6 +360,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 </main>
 
 <div id="modal" hidden><div class="sheet"></div></div>
+<div id="info" hidden></div>
 <div id="dex" hidden></div>
 <canvas id="confetti" hidden></canvas>
 
@@ -343,14 +383,14 @@ const ldDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
 
 /* ================= data ================= */
 const CHARS={
-  athena:{name:'아테나',color:'#5f9fe6',ability:'지혜의 부엉이',desc:'주사위를 굴린 뒤, 한 번 더 굴릴 수 있어요',when:'after'},
-  hermes:{name:'헤르메스',color:'#f19a2e',ability:'날개 신발',desc:'주사위를 굴린 뒤, 나온 숫자에 +1 또는 -1',when:'after'},
-  artemis:{name:'아르테미스',color:'#3fae7f',ability:'은빛 화살',desc:'주사위 대신 1·2·3 중에 골라서 가요',when:'before'},
-  heracles:{name:'헤라클레스',color:'#c27a3f',ability:'엄청난 힘',desc:'주사위 2개를 굴려서 큰 숫자만큼 가요',when:'before'},
-  poseidon:{name:'포세이돈',color:'#1f9fb3',ability:'큰 파도',desc:'미끄럼틀에 걸려도 미끄러지지 않아요 (저절로)',when:'auto'},
-  hera:{name:'헤라',color:'#9370d4',ability:'공작새의 눈',desc:'바로 앞에 있는 사람과 자리를 바꿔요',when:'before'},
-  demeter:{name:'데메테르',color:'#8bb02c',ability:'봄의 꽃길',desc:'앞 6칸 안에 있는 사다리로 바로 가요',when:'before'},
-  aphrodite:{name:'아프로디테',color:'#ec6f9c',ability:'사랑의 축복',desc:'나와 친구 한 명이 함께 2칸 앞으로 가요',when:'before'},
+  athena:{title:'지혜와 용기의 여신',story:'똑똑하고 용감한 여신이에요. 부엉이 친구와 함께 다니며 어려운 문제를 척척 풀어요.',name:'아테나',color:'#5f9fe6',ability:'지혜의 부엉이',desc:'주사위를 굴린 뒤, 한 번 더 굴릴 수 있어요',when:'after'},
+  hermes:{title:'신들의 심부름꾼',story:'날개 달린 신발을 신고 세상에서 제일 빨리 달려요. 신들의 소식을 여기저기 전해 줘요.',name:'헤르메스',color:'#f19a2e',ability:'날개 신발',desc:'주사위를 굴린 뒤, 나온 숫자에 +1 또는 -1',when:'after'},
+  artemis:{title:'달과 사냥의 여신',story:'은빛 활을 아주 잘 쏘아요. 숲속 동물 친구들을 지켜 주고, 아폴론과 쌍둥이예요.',name:'아르테미스',color:'#3fae7f',ability:'은빛 화살',desc:'주사위 대신 1·2·3 중에 골라서 가요',when:'before'},
+  heracles:{title:'힘센 영웅',story:'세상에서 가장 힘이 센 영웅이에요. 아주 어려운 일 열두 가지를 모두 해냈어요.',name:'헤라클레스',color:'#c27a3f',ability:'엄청난 힘',desc:'주사위 2개를 굴려서 큰 숫자만큼 가요',when:'before'},
+  poseidon:{title:'바다의 신',story:'삼지창을 휘두르면 파도가 출렁출렁! 제우스의 형이고 바닷속 친구들의 왕이에요.',name:'포세이돈',color:'#1f9fb3',ability:'큰 파도',desc:'미끄럼틀에 걸려도 미끄러지지 않아요 (저절로)',when:'auto'},
+  hera:{title:'신들의 여왕',story:'제우스의 아내이고 올림포스의 여왕이에요. 눈 무늬가 반짝이는 공작새를 아주 좋아해요.',name:'헤라',color:'#9370d4',ability:'공작새의 눈',desc:'바로 앞에 있는 사람과 자리를 바꿔요',when:'before'},
+  demeter:{title:'곡식과 열매의 여신',story:'밀과 과일이 쑥쑥 자라게 도와줘요. 데메테르가 웃으면 따뜻한 봄이 와요.',name:'데메테르',color:'#8bb02c',ability:'봄의 꽃길',desc:'앞 6칸 안에 있는 사다리로 바로 가요',when:'before'},
+  aphrodite:{title:'사랑과 아름다움의 여신',story:'바다 거품에서 태어났어요. 하얀 비둘기와 예쁜 장미를 좋아해요.',name:'아프로디테',color:'#ec6f9c',ability:'사랑의 축복',desc:'나와 친구 한 명이 함께 2칸 앞으로 가요',when:'before'},
 };
 const CHAR_KEYS=Object.keys(CHARS);
 const PCOLORS=['#ff7b6b','#4b95e8','#3fae7f','#a374dc','#f0a51f'];
@@ -442,6 +482,8 @@ const SFX={
   up(){[523,659,784,1047].forEach((f,i)=>tone(f,.18,{type:'triangle',vol:.09,at:i*.09}))},
   down(){tone(700,.6,{type:'sine',vol:.09,to:180})},
   card(){[1319,1568,1760,2093].forEach((f,i)=>tone(f,.12,{type:'sine',vol:.06,at:i*.06}))},
+  deal(){[0,.2].forEach(a=>tone(500,.12,{type:'triangle',vol:.06,at:a,to:900}))},
+  drum(){for(let i=0;i<8;i++)tone(140+i*12,.06,{type:'triangle',vol:.08,at:i*.07})},
   bump(){tone(220,.15,{type:'triangle',vol:.1});tone(180,.18,{type:'triangle',vol:.08,at:.12})},
   win(){[523,659,784,659,784,1047].forEach((f,i)=>tone(f,.22,{type:'triangle',vol:.1,at:i*.13}))},
   ok(){[784,1047].forEach((f,i)=>tone(f,.15,{type:'triangle',vol:.09,at:i*.1}))},
@@ -545,11 +587,11 @@ function renderPanel(){
   const p=cur(),c=CHARS[p.char];
   const st=[];if(p.shield)st.push('아이기스 방패');if(p.ariadne)st.push('아리아드네의 실');if(p.skip)st.push('한 번 쉬어요');
   $('#turnCard').style.setProperty('--pc',p.color);
-  $('#turnCard').innerHTML=`<div class="turn-top"><img src="${charImg(p.char)}" alt=""><div><h2>${p.name} 차례!</h2><p>${c.name} · ${p.pos===0?'출발':p.pos+'번 칸'}</p></div></div>
+  $('#turnCard').innerHTML=`<div class="turn-top"><img class="tapme" data-info="${S.turn}" src="${charImg(p.char)}" alt="${c.name} 보기"><div><h2>${p.name} 차례!</h2><p>${c.name} · ${p.pos===0?'출발':p.pos+'번 칸'}</p></div></div>
    <div class="ability"><div class="ability-head"><b>${c.ability}</b><span class="orb ${p.charge?'on':'off'}">${ORB_SVG}${p.charge?'충전됨':'비었음'}</span></div><p>${c.desc}</p>
    ${st.length?`<div class="status">${st.map(s=>`<span class="st">${s}</span>`).join('')}</div>`:''}</div>`;
   $('#playerList').innerHTML=S.players.map((q,i)=>{const cc=CHARS[q.char];const where=q.rank?`${q.rank}등`:(q.pos===0?'출발':q.pos+'칸');
-    return `<div class="pl ${i===S.turn&&!q.rank?'cur':''}" style="--pc:${q.color}"><img src="${charImg(q.char)}" alt=""><div class="who"><b>${q.name}</b><span>${cc.name}${q.shield?' · 방패':''}${q.skip?' · 쉬기':''}</span></div><div class="where">${where}<small>능력<span class="dot ${q.charge?'on':'off'}"></span></small></div></div>`}).join('');
+    return `<div class="pl tapme ${i===S.turn&&!q.rank?'cur':''}" data-info="${i}" style="--pc:${q.color}"><img src="${charImg(q.char)}" alt=""><div class="who"><b>${q.name}</b><span>${cc.name}${q.shield?' · 방패':''}${q.skip?' · 쉬기':''}</span></div><div class="where">${where}<small>능력<span class="dot ${q.charge?'on':'off'}"></span></small></div></div>`}).join('');
   $('#btnSound').textContent=soundOn?'소리 켜짐':'소리 꺼짐';
   $('#btnHome').disabled=busy;
 }
@@ -745,20 +787,42 @@ async function rollDice(k=1){
 }
 
 /* ================= cards ================= */
+function cardBack(){return `<div class="mc-back">${ASSETS.icon_zeus?`<img src="${ASSETS.icon_zeus}" alt="">`:`<svg viewBox="0 0 24 24"><path d="${STAR_PATH}"/></svg>`}</div>`}
+function cardFront(c){return `<div class="mc-front"><div class="mc-art">${cardArt(c)}<span class="mc-ribbon">${CAT[c.cat].label}</span></div><div class="mc-name">${c.name}</div><div class="mc-fx">${c.fx}</div></div>`}
+function sparks(el){const b=el.querySelector('.burst');if(!b||REDUCED)return;b.innerHTML='';
+  for(let i=0;i<16;i++){const sp=document.createElement('span');sp.className='spark';sp.style.setProperty('--a',(i*22.5+rnd(10))+'deg');sp.style.setProperty('--r',(110+rnd(70))+'px');sp.style.animationDelay=(rnd(120))+'ms';b.appendChild(sp)}}
 async function drawCard(p){
-  if(!S.deck.length)S.deck=shuffle(CARDS.map(c=>c.id));
-  const c=CARD_BY[S.deck.pop()];dexAdd(c.id);
-  await say('반짝이는 별 칸! 능력도 다시 충전됐어요. 카드를 뽑아요!',{wait:true});
-  const cc=CAT[c.cat].color;
-  openModal(`<div class="mcard" id="mc" style="--cc:${cc}"><div class="mcard-in"><div class="mc-back"><svg viewBox="0 0 24 24"><path d="${STAR_PATH}"/></svg></div>
-    <div class="mc-front"><div class="mc-art">${cardArt(c)}<span class="mc-ribbon">${CAT[c.cat].label}</span></div><div class="mc-name">${c.name}</div><div class="mc-fx">${c.fx}</div></div></div></div>
-    <p class="intro">${c.intro}</p><button class="btn gold" id="cardOk" disabled>좋아요!</button>`);
-  await sleep(T(550));SFX.card();$('#mc').classList.add('flip');
-  await sleep(T(700));
-  const spoken=say(`${c.name}. ${c.intro} ${c.fx}.`,{wait:true,narr:false});
+  if(S.deck.length<2){const rest=S.deck.slice();S.deck=shuffle(CARDS.map(c=>c.id).filter(id=>!rest.includes(id))).concat(rest)}
+  const ids=[S.deck.pop(),S.deck.pop()];
+  await say('반짝이는 별 칸! 능력도 다시 충전됐어요.',{wait:true});
+  openModal(`<div class="draw-ask" id="drawAsk">카드를 한 장 골라요!</div>
+    <div class="draw-row">${ids.map((id,i)=>`<button class="mcard deal" data-k="${i}" style="--d:${(i*0.2).toFixed(2)}s" aria-label="${i+1}번 카드"><div class="mcard-in">${cardBack()}</div><div class="burst"></div></button>`).join('')}</div>
+    <p class="intro" id="drawIntro" hidden></p><button class="btn gold" id="cardOk" hidden disabled>좋아요!</button>`);
+  $('#modal .sheet').classList.add('draw-sheet');
+  SFX.deal();
+  say('카드를 한 장 골라요!');
+  const cards=[...$('#modal').querySelectorAll('.mcard')];
+  const k=await new Promise(res=>cards.forEach(b=>b.onclick=()=>res(+b.dataset.k)));
+  cards.forEach(b=>b.disabled=true);
+  S.deck.unshift(ids[1-k]);
+  const c=CARD_BY[ids[k]];dexAdd(c.id);save();
+  const me=cards[k],them=cards[1-k];
+  SFX.tap();me.classList.remove('deal');them.classList.remove('deal');them.classList.add('away');me.classList.add('chosen');
+  $('#drawAsk').textContent='두근두근...';say('두근두근!');
+  await sleep(T(420));them.remove();
+  me.style.setProperty('--cc',CAT[c.cat].color);
+  me.querySelector('.mcard-in').innerHTML=cardBack()+cardFront(c);
+  me.classList.add('grow');await sleep(T(480));
+  me.classList.add('shake');SFX.drum();await sleep(T(620));me.classList.remove('shake');
+  SFX.card();me.classList.add('flip');sparks(me);
+  await sleep(T(780));
+  const ask=$('#drawAsk');ask.textContent=CAT[c.cat].label+'!';ask.style.color=CAT[c.cat].color;ask.classList.add('reveal');
+  const intro=$('#drawIntro');intro.textContent=c.intro;intro.hidden=false;
+  const ok=$('#cardOk');ok.hidden=false;
+  say(`${c.name}. ${c.intro} ${c.fx}.`,{narr:false});
   setNarr(`${c.name}: ${c.fx}`);
-  setTimeout(()=>{const b=$('#cardOk');if(b)b.disabled=false},T(900));
-  await new Promise(res=>{$('#cardOk').onclick=()=>{SFX.tap();res()}});
+  setTimeout(()=>{if(ok)ok.disabled=false},T(900));
+  await new Promise(res=>{ok.onclick=()=>{SFX.tap();res()}});
   if('speechSynthesis' in window)try{speechSynthesis.cancel()}catch(e){}
   closeModal();
   await c.run(p);
@@ -809,7 +873,7 @@ function endGame(){
 
 /* ================= modal / confetti ================= */
 function openModal(html){const m=$('#modal');m.querySelector('.sheet').innerHTML=html;m.hidden=false}
-function closeModal(){const m=$('#modal');m.hidden=true;m.querySelector('.sheet').innerHTML=''}
+function closeModal(){const m=$('#modal');m.hidden=true;const sh=m.querySelector('.sheet');sh.innerHTML='';sh.className='sheet'}
 function confetti(){
   if(REDUCED)return;const cv=$('#confetti');cv.hidden=false;const ctx=cv.getContext('2d');
   const W=cv.width=innerWidth,H=cv.height=innerHeight;const cols=['#f5b93c','#ff7b6b','#4b95e8','#3fbf9b','#a374dc','#fff'];
@@ -834,7 +898,8 @@ function openDex(){
   $('#dexClose').onclick=()=>{SFX.tap();D.hidden=true;if(S&&!busy&&!$('#game').hidden)setNarr('')};
   D.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{
     const c=CARD_BY[b.dataset.id];SFX.card();
-    openModal(`<div class="mcard flip" style="--cc:${CAT[c.cat].color}"><div class="mcard-in"><div class="mc-back"></div><div class="mc-front"><div class="mc-art">${cardArt(c)}<span class="mc-ribbon">${CAT[c.cat].label}</span></div><div class="mc-name">${c.name}</div><div class="mc-fx">${c.fx}</div></div></div></div><p class="intro">${c.intro}</p><button class="btn gold" id="dxOk">닫기</button>`);
+    openModal(`<div class="mcard" id="dxCard" style="--cc:${CAT[c.cat].color}"><div class="mcard-in">${cardBack()}${cardFront(c)}</div><div class="burst"></div></div><p class="intro">${c.intro}</p><button class="btn gold" id="dxOk">닫기</button>`);
+    setTimeout(()=>{const d=$('#dxCard');if(d){d.classList.add('flip');sparks(d)}},T(250));
     say(`${c.name}. ${c.intro}`,{narr:false});
     $('#dxOk').onclick=()=>{SFX.tap();closeModal()};
   });
@@ -846,7 +911,7 @@ function showTitle(){
   showOnly('title');setNarr('');
   if(ASSETS.bg_board)$('#titleBg').style.backgroundImage=`url(${ASSETS.bg_board})`;
   const have=CHAR_KEYS.filter(k=>ASSETS['char_'+k]);const pick=(have.length>=2?shuffle(have).slice(0,2):['athena','hermes']);
-  const ch=pick.map(k=>`<img src="${charImg(k)}" alt="${CHARS[k].name}">`);
+  const ch=pick.map(k=>`<img class="tapme" data-char-info="${k}" src="${charImg(k)}" alt="${CHARS[k].name}">`);
   $('#titleChars').innerHTML=ASSETS.icon_zeus?ch[0]+`<img class="title-icon" src="${ASSETS.icon_zeus}" alt="제우스">`+ch[1]:ch.join('');
   const sv=ldGet('olympus-save',null);$('#btnCont').hidden=!(sv&&sv.players&&!sv.over);
 }
@@ -889,6 +954,29 @@ $('#btnHome').onclick=()=>{if(busy)return;SFX.tap();
   $('#hmNo').onclick=()=>{SFX.tap();closeModal()};
   $('#hmYes').onclick=()=>{SFX.tap();closeModal();save();S=null;if('speechSynthesis' in window)try{speechSynthesis.cancel()}catch(e){}showTitle()};
 };
+function openInfo(key,p){
+  const c=CHARS[key],col=p?p.color:c.color;
+  const where=p?(p.rank?`${p.rank}등 도착`:(p.pos===0?'출발점':`${p.pos}번 칸`)):'';
+  const I=$('#info');
+  I.innerHTML=`<div class="info-card" style="--pc:${col}" role="dialog" aria-label="${c.name}">
+    <div class="info-art">${p?`<span class="info-who">${p.name} · ${where}</span>`:''}<img src="${charImg(key)}" alt=""></div>
+    <div class="info-body"><span class="info-title">${c.title}</span><h2>${c.name}</h2><p>${c.story}</p>
+      <div class="info-abl"><div class="ability-head"><b>특수능력 · ${c.ability}</b>${p?`<span class="orb ${p.charge?'on':'off'}">${ORB_SVG}${p.charge?'충전됨':'비었음'}</span>`:''}</div><p>${c.desc}</p></div>
+      <button class="btn gold" id="infoClose">닫기</button></div></div>`;
+  I.hidden=false;SFX.card();
+  if(!busy)say(`${c.name}. ${c.title}. ${c.story} 특수능력은 ${c.ability}. ${c.desc}.`,{narr:false});
+  const close=()=>{SFX.tap();I.hidden=true;I.innerHTML='';if(!busy&&'speechSynthesis' in window)try{speechSynthesis.cancel()}catch(e){}};
+  $('#infoClose').onclick=close;
+  I.onclick=e=>{if(e.target===I)close()};
+}
+document.addEventListener('click',e=>{
+  if(!$('#info').hidden)return;
+  const t=e.target.closest('[data-info],.token,[data-char-info]');if(!t)return;
+  if(t.dataset.charInfo){ac();openInfo(t.dataset.charInfo,null);return}
+  if(!S)return;
+  const i=t.classList.contains('token')?+t.id.slice(2):+t.dataset.info;
+  const p=S.players[i];if(p)openInfo(p.char,p);
+});
 showTitle();
 </script>
 
